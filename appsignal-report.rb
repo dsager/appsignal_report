@@ -11,8 +11,16 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-require 'date'
+require 'uri'
+require 'net/http'
+require 'json'
 
 require_relative 'lib/appsignal_report'
 
-report = AppsignalReport.new
+report = AppsignalReport.new(
+  api_token: ENV['APPSIGNAL_API_TOKEN'],
+  app_id: ENV['APPSIGNAL_APP_ID'],
+)
+
+generated_report = report.generate
+puts generated_report
