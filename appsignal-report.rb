@@ -15,12 +15,11 @@ require 'uri'
 require 'net/http'
 require 'json'
 
-require_relative 'lib/appsignal_report'
+require_relative 'lib/appsignal_weekly_report'
 
-report = AppsignalReport.new(
+weekly_report = AppsignalWeeklyReport.new(
   api_token: ENV['APPSIGNAL_API_TOKEN'],
   app_id: ENV['APPSIGNAL_APP_ID'],
 )
 
-generated_report = report.generate
-puts generated_report
+weekly_report.print

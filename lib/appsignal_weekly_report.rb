@@ -1,5 +1,5 @@
-class AppsignalReport
-  attr_reader :api_token, :app_id
+class AppsignalWeeklyReport
+  attr_reader :api_token, :app_id, :report
 
   # @param [String] api_token API token, find it here:
   #                           <https://appsignal.com/users/edit>
@@ -8,11 +8,21 @@ class AppsignalReport
   def initialize(api_token:, app_id:)
     @api_token = api_token
     @app_id = app_id
+    @report = nil
   end
 
-  # @return [Hash]
+  def print
+    generate
+    puts '', ' ## AppSignal - Weekly Report ##', ''
+    report.each do |key, value|
+      puts format('%25s: %s', key, value)
+    end
+  end
+
+  private
+
   def generate
-    summarize(
+    @report = summarize(
       perform_api_request(
         uri(
           token: api_token,
@@ -27,9 +37,9 @@ class AppsignalReport
     {
       from: data[:from],
       to: data[:to],
-      average_error_rate: get_average(data[:data], :ex_rate),
-      average_response_time: get_average(data[:data], :mean),
-      average_throughput: get_average(data[:data], :count),
+      error_rate: get_average(data[:data], :ex_rate),
+      response_time: get_average(data[:data], :mean),
+      hourly_throughput: get_average(data[:data], :count),
     }
   end
 
