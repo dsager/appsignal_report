@@ -1,5 +1,5 @@
 class AppsignalReport
-  attr_reader :api_token, :app_id
+  attr_reader :api_token, :app_id, :report
 
   # @param [String] api_token API token, find it here:
   #                           <https://appsignal.com/users/edit>
@@ -8,16 +8,17 @@ class AppsignalReport
   def initialize(api_token:, app_id:)
     @api_token = api_token
     @app_id = app_id
+    @report = {}
   end
 
   def print
     puts "\nAppSignal - #{self.class.name.sub('Appsignal', '')}\n"
-    report = generate
+    generate
     report.each { |key, value| puts format('%30s: %s', key, value) }
     puts "\n\n"
   end
 
-  # To be defined by subclass
+  # To be defined by subclass, should set the instance var @report.
   # @return [Hash]
   def generate; end
 

@@ -1,16 +1,11 @@
-require 'date'
+require 'time'
 require_relative 'appsignal_report'
 
 class AppsignalDeployReport < AppsignalReport
   def generate
-    @report = {}
-    @last_deploy_time = DateTime.parse(last_deploy[:created_at]).to_time
-    @report.merge(last_deploy_time: @last_deploy_time)
-
-    metrics = perform_api_request(metrics_uri)
-    @report.merge(from: metrics[:from], to: metrics[:to])
-
-    data = split_metrics(metrics[:data])
+    @report = { last_deploy_time: Time.parse(last_deploy[:created_at]).utc }
+    api_response = perform_api_request(metrics_uri)
+    data = balance_samples(gather_samples(api_response[:data]))
     %i(before after).each do |key|
       @report[key] = {
         data_points: data[key].size,
@@ -19,15 +14,38 @@ class AppsignalDeployReport < AppsignalReport
         hourly_throughput: get_average(data[key], :count),
       }
     end
-    @report[:diff] = generate_diff
+    @report.merge!(
+      data_samples_from: Time.at(data[:before].first[:timestamp]).utc,
+      data_samples_to: Time.at(data[:after].last[:timestamp]).utc,
+      diff: generate_diff,
+    )
+    @report[:messages] = generate_messages
+    report
+  end
 
-    @report[:diff]
+  private
+
+  def generate_messages
+    {
+      error_rate: metric_message(:error_rate, '%'),
+      response_time: metric_message(:response_time, 'ms'),
+      hourly_throughput: metric_message(:hourly_throughput, ' req/h'),
+    }
+  end
+
+  def metric_message(field, unit = '')
+    <<-txt.split.join(' ')
+      After the deploy, the #{field.to_s.sub('_', ' ')}
+      #{report[:diff][field].positive? ? 'increased' : 'decreased'}
+      by #{report[:diff][field].abs.round(2)}#{unit}
+      (from #{report[:before][field].round(2)}#{unit}
+      to #{report[:after][field].round(2)}#{unit}, that is a change of
+      #{(report[:diff][:"#{field}_pct"] * 100).round(2)}%).
+    txt
   end
 
   def generate_diff
     {
-      data_points: abs_diff(:data_points),
-      data_points_pct: pct_diff(:data_points),
       error_rate: abs_diff(:error_rate),
       error_rate_pct: pct_diff(:error_rate),
       response_time: abs_diff(:response_time),
@@ -38,16 +56,17 @@ class AppsignalDeployReport < AppsignalReport
   end
 
   def abs_diff(key)
-    @report[:after][key] - @report[:before][key]
+    report[:after][key] - report[:before][key]
   end
 
   def pct_diff(key)
-    abs_diff(key).fdiv(@report[:before][key])
+    abs_diff(key).fdiv(report[:before][key])
   end
 
-  def split_metrics(metrics)
-    metrics.each_with_object(before: [], after: []) do |row, hash|
-      if row[:timestamp] < @last_deploy_time.to_i
+  def gather_samples(samples)
+    samples.each_with_object(before: [], after: []) do |row, hash|
+      next if timestamp_in_grace_period?(row[:timestamp])
+      if row[:timestamp] < report[:last_deploy_time].to_time.to_i
         hash[:before] << row
       else
         hash[:after] << row
@@ -55,26 +74,31 @@ class AppsignalDeployReport < AppsignalReport
     end
   end
 
-  private
+  def timestamp_in_grace_period?(timestamp)
+    grace_period = 10 * 60
+    (timestamp - report[:last_deploy_time].to_time.to_i).abs < grace_period
+  end
+
+  def balance_samples(samples)
+    sample_size = [samples[:before].size, samples[:after].size].min
+    samples[:before] = samples[:before].last(sample_size)
+    samples[:after] = samples[:after].first(sample_size)
+    samples
+  end
 
   def metrics_uri
-    # puts "\nPARAMS\n"
-    query = URI.encode_www_form(#p
+    one_hour = 3600 # seconds
+    query = URI.encode_www_form(
       token: api_token,
-      from: format_time(@last_deploy_time - 3600), # one hour before last deploy
-      to: format_time(@last_deploy_time + 3600), # one hour after last deploy
+      from: (report[:last_deploy_time] - one_hour).iso8601,
+      to: (report[:last_deploy_time] + one_hour).iso8601,
       'fields[]': %i(mean count ex_rate)
     )
     URI("#{base_uri}/graphs.json?#{query}")
   end
 
-  def format_time(time)
-    time.strftime('%FT%T%:z')
-  end
-
   def last_deploy
     @last_deploy = perform_api_request(last_deploy_marker_uri)[:markers].first
-    # { created_at: '2017-08-06T19:14:53.405+02:00' }
   end
 
   # @return [URI]

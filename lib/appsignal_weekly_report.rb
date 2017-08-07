@@ -9,7 +9,7 @@ require_relative 'appsignal_report'
 #
 class AppsignalWeeklyReport < AppsignalReport
   def generate
-    parse_api_response(perform_api_request(uri))
+    @report = parse_api_response(perform_api_request(uri))
   end
 
   private
