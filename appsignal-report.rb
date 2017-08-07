@@ -34,8 +34,8 @@ parser = OptionParser.new do |parser|
     options[:type] = t
   end
   parser.on('--format FORMAT',
-            %i(text json),
-            'Select output format (text, json), default is text') do |f|
+            %i(text json slack),
+            'Select output format (text, json, slack), default is text') do |f|
     options[:format] = f.to_sym
   end
   parser.separator ''
@@ -66,4 +66,7 @@ when :text
 when :json
   report.generate
   puts report.report.to_json
+when :slack
+  report.generate
+  puts report.slack_message.to_json
 end

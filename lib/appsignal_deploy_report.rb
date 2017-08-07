@@ -23,7 +23,32 @@ class AppsignalDeployReport < AppsignalReport
     report
   end
 
+  def slack_message
+    {
+      text: 'AppSignal Deploy Report',
+      attachments: slack_status_messages.map { |message| { text: message } },
+    }
+  end
+
   private
+
+  def slack_status_messages
+    [
+      ":clock4: The deploy finished at #{report[:last_deploy_time]}",
+      [
+        report[:diff][:error_rate].negative? ? ':+1:' : ':-1:',
+        report[:messages][:error_rate]
+      ].join(' '),
+      [
+        report[:diff][:response_time].negative? ? ':+1:' : ':-1:',
+        report[:messages][:response_time]
+      ].join(' '),
+      [
+        ":chart_with_#{report[:diff][:hourly_throughput].negative? ? 'downwards' : 'upwards'}_trend:",
+        report[:messages][:hourly_throughput]
+      ].join(' '),
+    ]
+  end
 
   def generate_messages
     {
