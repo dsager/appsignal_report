@@ -15,4 +15,5 @@ deploy:
   gem: appsignal_report
   on:
     tags: true
+    branch: master
     repo: dsager/appsignal_report
