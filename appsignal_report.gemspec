@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{lib}/**/*.rb', 'bin/*', 'LICENSE', '*.md']
   s.require_path = 'lib'
+  s.test_files = s.files.grep(%r{^(spec)/})
 
   s.executables << 'appsignal_report_deploy'
   s.executables << 'appsignal_report_weekly'
