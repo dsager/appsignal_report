@@ -6,6 +6,7 @@ Elixir applications.
 
 ## Status
 
+[![Gem Version](https://badge.fury.io/rb/appsignal_report.svg)](https://badge.fury.io/rb/appsignal_report)
 [![Build Status](https://travis-ci.org/dsager/appsignal_report.svg?branch=master)](https://travis-ci.org/dsager/appsignal_report)
 
 ## Reports
