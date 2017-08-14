@@ -17,7 +17,7 @@
 require 'appsignal_report'
 require 'optparse'
 
-options = { format: :text, app_id: nil, app_name: nil }
+options = { slack_webhook: nil, app_id: nil, app_name: nil }
 parser = OptionParser.new do |parser|
   parser.banner =
     'Usage: APPSIGNAL_API_TOKEN=XXX ./bin/appsignal_report_weekly [options]'
@@ -35,11 +35,11 @@ parser = OptionParser.new do |parser|
             'Specify a name for the Appsignal App') do |name|
     options[:app_name] = name
   end
-  parser.on('-f FORMAT',
-            '--format FORMAT',
-            %i(text json slack),
-            'Select output format (text, json, slack), default is text') do |f|
-    options[:format] = f.to_sym
+  parser.on('-s WEBHOOK_URL',
+            '--slack WEBHOOK_URL',
+            String,
+            'Post the report to a Slack Webhook') do |url|
+    options[:slack_webhook] = url
   end
   parser.separator ''
   parser.separator 'Common options:'
@@ -56,13 +56,14 @@ report = AppsignalReport::WeeklyReport.new(
   app_name: options[:app_name]
 )
 
-case options[:format]
-when :text
-  report.print
-when :json
-  report.generate
+report.generate
+
+unless options[:slack_webhook].nil?
+  message = AppsignalReport::SlackMessage.new(
+    report: report,
+    webhook_url: options[:slack_webhook]
+  )
+  puts message.post
+else
   puts report.report.to_json
-when :slack
-  report.generate
-  puts report.slack_message.to_json
 end

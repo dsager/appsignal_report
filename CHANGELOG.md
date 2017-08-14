@@ -6,6 +6,7 @@ _August 14th, 2017_
 - ruby gem
 - properly implemented weekly report
 - optional app name parameter
+- post to slack feature (replaces format)
 - code structure improvement
 
 ### 0.1.0-beta.1

@@ -29,10 +29,9 @@ record your deployments.
 
 ```
 $ gem install appsignal_report
-$ export APPSIGNAL_API_TOKEN=ABC123
-$ appsignal_report_deploy -i XYZ456 -f json -n 'My App'
+$ APPSIGNAL_API_TOKEN=ABC123 appsignal_report_deploy -i XYZ456
 {
-  "title": "AppSignal Deploy Report (My App)",
+  "title": "AppSignal Deploy Report",
   "last_deploy_time": "2017-08-10 09:47:52 UTC",
   "before": {
     "data_points": 62,
@@ -57,6 +56,7 @@ $ appsignal_report_deploy -i XYZ456 -f json -n 'My App'
     "hourly_throughput_pct": -0.041708680905674214
   },
   "messages": {
+    "info": "The deploy finished at 2017-08-10 09:47:52 UTC",
     "error_rate": "The error rate decreased by 0.39% (from 0.47% to 0.07%, that is a change of -84.31%).",
     "response_time": "The response time decreased by 38.23ms (from 94.94ms to 56.71ms, that is a change of -40.27%).",
     "hourly_throughput": "The hourly throughput decreased by 1365.0 req/h (from 32727.0 req/h to 31362.0 req/h, that is a change of -4.17%)."
@@ -74,10 +74,9 @@ week to the other.
 
 ```
 $ gem install appsignal_report
-$ export APPSIGNAL_API_TOKEN=ABC123
-$ appsignal_report_weekly -i XYZ456 -f json -n 'My App'
+$ APPSIGNAL_API_TOKEN=ABC123 appsignal_report_weekly -i XYZ456
 {
-  "title": "AppSignal Weekly Report (My App)",
+  "title": "AppSignal Weekly Report",
   "now": "2017-08-14 13:19:15 UTC",
   "one_week_ago": "2017-08-07 13:19:15 UTC",
   "two_weeks_ago": "2017-07-31 13:19:15 UTC",
@@ -104,6 +103,7 @@ $ appsignal_report_weekly -i XYZ456 -f json -n 'My App'
     "hourly_throughput_pct": -0.1095450546169726
   },
   "messages": {
+    "info": "Comparing the weeks 2017-07-31-2017-08-07 and 2017-08-07-2017-08-14.",
     "error_rate": "The error rate decreased by 0.13% (from 0.2% to 0.06%, that is a change of -68.29%).",
     "response_time": "The response time decreased by 13.28ms (from 74.64ms to 61.36ms, that is a change of -17.79%).",
     "hourly_throughput": "The hourly throughput decreased by 3791.48 req/h (from 34611.17 req/h to 30819.68 req/h, that is a change of -10.95%)."

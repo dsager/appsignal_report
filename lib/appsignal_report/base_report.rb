@@ -18,29 +18,13 @@ module AppsignalReport
       @report = {}
     end
 
-    def print
-      puts "\n#{title}\n"
-      generate
-      report.each { |key, value| puts format('%30s: %s', key, value) }
-      puts "\n\n"
-    end
-
-    # @return [Hash]
-    def slack_message
-      {
-        text: title,
-        attachments: slack_status_messages.map { |message| { text: message } },
-      }
-    end
-
     # To be defined by subclass, should set the instance var @report.
     # @return [Hash]
     def generate
       raise NotImplementedError
     end
 
-    private
-
+    # @return [String]
     def title
       [
         'AppSignal',
@@ -48,6 +32,8 @@ module AppsignalReport
         !app_name.nil? ? "(#{app_name})" : nil
       ].compact.join(' ')
     end
+
+    private
 
     def process_metrics
       api_response = perform_api_request(metrics_uri)
@@ -69,31 +55,16 @@ module AppsignalReport
       report
     end
 
-    def slack_status_messages
-      [
-        ":clock4: The deploy finished at #{report[:last_deploy_time]}",
-        [
-          report[:diff][:error_rate].negative? ? ':+1:' : ':-1:',
-          report[:messages][:error_rate]
-        ].join(' '),
-        [
-          report[:diff][:response_time].negative? ? ':+1:' : ':-1:',
-          report[:messages][:response_time]
-        ].join(' '),
-        [
-          ":chart_with_#{report[:diff][:hourly_throughput].negative? ? 'downwards' : 'upwards'}_trend:",
-          report[:messages][:hourly_throughput]
-        ].join(' '),
-      ]
-    end
-
     def generate_messages
       {
+        info: info_message,
         error_rate: metric_message(:error_rate, '%'),
         response_time: metric_message(:response_time, 'ms'),
         hourly_throughput: metric_message(:hourly_throughput, ' req/h'),
       }
     end
+
+    def info_message; end
 
     def metric_message(field, unit = '')
       <<-txt.split.join(' ')
