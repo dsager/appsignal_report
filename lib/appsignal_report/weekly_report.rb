@@ -20,6 +20,13 @@ module AppsignalReport
 
     private
 
+    # @return [String]
+    def info_message
+      week_1 = "#{report[:two_weeks_ago].to_date}-#{report[:one_week_ago].to_date}"
+      week_2 = "#{report[:one_week_ago].to_date}-#{report[:now].to_date}"
+      "Comparing the weeks #{week_1} and #{week_2}."
+    end
+
     def report_split_time
       report[:one_week_ago]
     end

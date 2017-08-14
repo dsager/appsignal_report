@@ -18,6 +18,11 @@ module AppsignalReport
 
     private
 
+    # @return [String]
+    def info_message
+      "The deploy finished at #{report[:last_deploy_time]}"
+    end
+
     # @return [Time|nil]
     def report_split_time
       report[:last_deploy_time]
