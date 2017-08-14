@@ -26,12 +26,14 @@ parser = OptionParser.new do |parser|
   parser.banner = 'Usage: APPSIGNAL_API_TOKEN=XXX ./weekly-report.rb [options]'
   parser.separator ''
   parser.separator 'Specific options:'
-  parser.on('--app-id ID',
+  parser.on('-i ID',
+            '--app-id ID',
             String,
             'Specify Appsignal App Id') do |id|
     options[:app_id] = id
   end
-  parser.on('--format FORMAT',
+  parser.on('-f FORMAT',
+            '--format FORMAT',
             %i(text json slack),
             'Select output format (text, json, slack), default is text') do |f|
     options[:format] = f.to_sym
