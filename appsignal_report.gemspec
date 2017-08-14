@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
 
   s.authors = ['Daniel Sager']
   s.email = 'software@sager1.de'
-  s.homepage = 'https://github.com/dsager/appsignal-report'
+  s.homepage = 'https://github.com/dsager/appsignal_report'
   s.license = 'MIT'
 
   s.summary = 'Useful reports around your AppSignal metrics'
