@@ -10,7 +10,7 @@
 #
 # Pull up the help message to learn about the usage of this script:
 #
-#         ./bin/weekly-report --help
+#         ./bin/appsignal_report_weekly --help
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -19,7 +19,8 @@ require 'optparse'
 
 options = { format: :text, app_id: nil, app_name: nil }
 parser = OptionParser.new do |parser|
-  parser.banner = 'Usage: APPSIGNAL_API_TOKEN=XXX ./bin/weekly-report [options]'
+  parser.banner =
+    'Usage: APPSIGNAL_API_TOKEN=XXX ./bin/appsignal_report_weekly [options]'
   parser.separator ''
   parser.separator 'Specific options:'
   parser.on('-i ID',
