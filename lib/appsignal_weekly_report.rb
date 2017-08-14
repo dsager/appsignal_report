@@ -2,35 +2,33 @@ require_relative 'appsignal_report'
 #
 # Weekly Report
 #
-# Calculates the average values over the last week for a few metrics:
+# Compare metrics of the last week with the one before that:
 # - Error Rate
 # - Response Time
-# - Hourly Throughput
+# - Throughput
 #
 class AppsignalWeeklyReport < AppsignalReport
   def generate
-    @report = parse_api_response(perform_api_request(uri))
+    @report = {
+      title: title,
+      now: Time.now.utc,
+      one_week_ago: (Time.now - (3600 * 24 * 7)).utc,
+      two_weeks_ago: (Time.now - (3600 * 24 * 14)).utc,
+    }
+    process_metrics
   end
 
   private
 
-  # @return [Hash]
-  # @param [Object] data
-  def parse_api_response(data)
-    {
-      from: data[:from],
-      to: data[:to],
-      error_rate: get_average(data[:data], :ex_rate),
-      response_time: get_average(data[:data], :mean),
-      hourly_throughput: get_average(data[:data], :count),
-    }
+  def report_split_time
+    report[:one_week_ago]
   end
 
   # @return [URI]
-  def uri
+  def metrics_uri
     query = URI.encode_www_form(
       token: api_token,
-      timeframe: :week,
+      from: report[:two_weeks_ago].iso8601,
       'fields[]': %i(mean count ex_rate)
     )
     URI("#{base_uri}/graphs.json?#{query}")
