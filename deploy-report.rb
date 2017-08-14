@@ -2,11 +2,18 @@
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-# Script to pull some data from Appsignal
+# Script to generate a report based on the last Appsignal deploy marker.
 #
+# The script will obtain the time of the last deploy from AppSignal and then
+# pull metrics for the time around that deploy (1 hour before to 1 hour after).
+# Based on these metrics it will calculate changes in response time, error rate
+# and throughput, possibly caused by the deploy.
+# The 20 minutes around the deploy are ignored to account for errors or slow
+# requests caused by service restarts or cold caches.
 #
-# Usage:
-#         ./appsignal-report.rb --help
+# Pull up the help message to learn about the usage of this script:
+#
+#         ./deploy-report.rb --help
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -15,23 +22,17 @@ require 'net/http'
 require 'json'
 require 'optparse'
 
-require_relative 'lib/appsignal_weekly_report'
 require_relative 'lib/appsignal_deploy_report'
 
-options = { type: :weekly, format: :text, app_id: nil }
+options = { format: :text, app_id: nil }
 parser = OptionParser.new do |parser|
-  parser.banner = 'Usage: ./appsignal-report.rb [options]'
+  parser.banner = 'Usage: APPSIGNAL_API_TOKEN=XXX ./deploy-report.rb [options]'
   parser.separator ''
   parser.separator 'Specific options:'
   parser.on('--app-id ID',
             String,
             'Specify Appsignal App Id') do |id|
     options[:app_id] = id
-  end
-  parser.on('--type TYPE',
-            %i(weekly deploy),
-            'Select report type (weekly, deploy), default is weekly') do |t|
-    options[:type] = t
   end
   parser.on('--format FORMAT',
             %i(text json slack),
@@ -47,15 +48,7 @@ parser = OptionParser.new do |parser|
 end
 parser.parse!
 
-report_class =
-  case options[:type]
-  when :weekly
-    AppsignalWeeklyReport
-  when :deploy
-    AppsignalDeployReport
-  end
-
-report = report_class.new(
+report = AppsignalDeployReport.new(
   api_token: ENV['APPSIGNAL_API_TOKEN'],
   app_id: options[:app_id]
 )
