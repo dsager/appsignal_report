@@ -4,15 +4,17 @@ module AppsignalReport
   # specific report classes.
   #
   class BaseReport
-    attr_reader :api_token, :app_id, :report
+    attr_reader :api_token, :app_id, :app_name, :report
 
     # @param [String] api_token API token, find it here:
     #                           <https://appsignal.com/users/edit>
     # @param [String] app_id    Application ID, visible in the URL when your
     #                           application is opened on Appsignal.com
-    def initialize(api_token:, app_id:)
+    # @param [String] app_name Application Name, used for the report title
+    def initialize(api_token:, app_id:, app_name: nil)
       @api_token = api_token
       @app_id = app_id
+      @app_name = app_name
       @report = {}
     end
 
@@ -40,8 +42,11 @@ module AppsignalReport
     private
 
     def title
-      title = self.class.name.split('::').last.split(/(?=[A-Z])/).join(' ')
-      "AppSignal #{title}"
+      [
+        'AppSignal',
+        self.class.name.split('::').last.split(/(?=[A-Z])/).join(' '),
+        !app_name.nil? ? "(#{app_name})" : nil
+      ].compact.join(' ')
     end
 
     def process_metrics
