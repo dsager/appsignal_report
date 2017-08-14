@@ -1,6 +1,6 @@
 # Changelog
 
-### 0.1.0-beta.2
+### 0.1.0
 _August 14th, 2017_
 
 - ruby gem
@@ -8,6 +8,8 @@ _August 14th, 2017_
 - optional app name parameter
 - post to slack feature (replaces format)
 - code structure improvement
+- CI via Travis
+- changelog, readme, minitest, gemfile
 
 ### 0.1.0-beta.1
 _August 7th, 2017_
