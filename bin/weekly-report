@@ -10,20 +10,16 @@
 #
 # Pull up the help message to learn about the usage of this script:
 #
-#         ./weekly-report.rb --help
+#         ./bin/weekly-report --help
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-require 'uri'
-require 'net/http'
-require 'json'
+require 'appsignal_report'
 require 'optparse'
-
-require_relative 'lib/appsignal_weekly_report'
 
 options = { format: :text, app_id: nil }
 parser = OptionParser.new do |parser|
-  parser.banner = 'Usage: APPSIGNAL_API_TOKEN=XXX ./weekly-report.rb [options]'
+  parser.banner = 'Usage: APPSIGNAL_API_TOKEN=XXX ./bin/weekly-report [options]'
   parser.separator ''
   parser.separator 'Specific options:'
   parser.on('-i ID',
@@ -47,7 +43,7 @@ parser = OptionParser.new do |parser|
 end
 parser.parse!
 
-report = AppsignalWeeklyReport.new(
+report = AppsignalReport::WeeklyReport.new(
   api_token: ENV['APPSIGNAL_API_TOKEN'],
   app_id: options[:app_id]
 )
