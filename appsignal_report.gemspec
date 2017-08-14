@@ -19,4 +19,7 @@ Gem::Specification.new do |s|
 
   s.executables << 'appsignal_report_deploy'
   s.executables << 'appsignal_report_weekly'
+
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'rake'
 end
