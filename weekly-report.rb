@@ -2,11 +2,15 @@
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-# Script to pull some data from Appsignal
+# Script to generate a report based on Appsignal data over the last two weeks.
 #
+# The script will pull metrics for the last two weeks.
+# Based on these metrics it will calculate changes in response time, error rate
+# and throughput, comparing one week to the other.
 #
-# Usage:
-#         ./appsignal-report.rb --help
+# Pull up the help message to learn about the usage of this script:
+#
+#         ./weekly-report.rb --help
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -16,24 +20,20 @@ require 'json'
 require 'optparse'
 
 require_relative 'lib/appsignal_weekly_report'
-require_relative 'lib/appsignal_deploy_report'
 
-options = { type: :weekly, format: :text, app_id: nil }
+options = { format: :text, app_id: nil }
 parser = OptionParser.new do |parser|
-  parser.banner = 'Usage: ./appsignal-report.rb [options]'
+  parser.banner = 'Usage: APPSIGNAL_API_TOKEN=XXX ./weekly-report.rb [options]'
   parser.separator ''
   parser.separator 'Specific options:'
-  parser.on('--app-id ID',
+  parser.on('-i ID',
+            '--app-id ID',
             String,
             'Specify Appsignal App Id') do |id|
     options[:app_id] = id
   end
-  parser.on('--type TYPE',
-            %i(weekly deploy),
-            'Select report type (weekly, deploy), default is weekly') do |t|
-    options[:type] = t
-  end
-  parser.on('--format FORMAT',
+  parser.on('-f FORMAT',
+            '--format FORMAT',
             %i(text json slack),
             'Select output format (text, json, slack), default is text') do |f|
     options[:format] = f.to_sym
@@ -47,15 +47,7 @@ parser = OptionParser.new do |parser|
 end
 parser.parse!
 
-report_class =
-  case options[:type]
-  when :weekly
-    AppsignalWeeklyReport
-  when :deploy
-    AppsignalDeployReport
-  end
-
-report = report_class.new(
+report = AppsignalWeeklyReport.new(
   api_token: ENV['APPSIGNAL_API_TOKEN'],
   app_id: options[:app_id]
 )
