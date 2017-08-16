@@ -9,6 +9,48 @@ Elixir applications.
 [![Gem Version](https://badge.fury.io/rb/appsignal_report.svg)](https://badge.fury.io/rb/appsignal_report)
 [![Build Status](https://travis-ci.org/dsager/appsignal_report.svg?branch=master)](https://travis-ci.org/dsager/appsignal_report)
 
+## Usage
+
+Use `gem install appsignal_report` to get `appsignal_report` (or add 
+`gem 'appsignal_report'` to your Gemfile). That will provide two executables
+`appsignal_report_deploy` and `appsignal_report_weekly`, they both support
+the same set of options:
+
+```
+$ appsignal_report_deploy -h
+Usage: APPSIGNAL_API_TOKEN=XXX ./bin/appsignal_report_deploy [options]
+
+Specific options:
+    -i, --app-id ID                  Specify Appsignal App Id
+    -n, --app-name NAME              Specify a name for the Appsignal App
+    -s, --slack WEBHOOK_URL          Post the report to a Slack Webhook
+
+Common options:
+    -h, --help                       Show this message
+```
+
+The option `--app-id` is the only required one, by default the tool will
+output the report data in JSON format to STDOUT. 
+
+## Posting to Slack
+
+`appsignal_report` supports posting formatted messages about the report 
+to Slack, instead of printing the raw report data. To do so, you need to 
+provide the URL of a 
+[Slack webhook](https://api.slack.com/custom-integrations/incoming-webhooks) 
+using the CLI option `--slack`:
+
+```
+$ APPSIGNAL_API_TOKEN=XXX ./bin/appsignal_report_weekly \
+  -app-id XYZ123 \
+  -app-name 'back-end' \
+  -slack https://hooks.slack.com/services/X/Y/Z
+```
+
+This is an example of how the post looks on Slack:
+
+![Slack Post Example](img/slack-post.png?raw=true "Slack Post Example")
+
 ## Reports
 
 Currently the gem supports two kinds of reports, a deploy report and a weekly
@@ -26,11 +68,9 @@ This only works if you are using AppSignal's
 [deploy markers](https://docs.appsignal.com/push-api/deploy-marker.html) to
 record your deployments.
 
-### Usage
+### Example
 
 ```
-$ gem install appsignal_report
-$ APPSIGNAL_API_TOKEN=ABC123 appsignal_report_deploy -i XYZ456
 {
   "title": "AppSignal Deploy Report",
   "last_deploy_time": "2017-08-10 09:47:52 UTC",
@@ -71,11 +111,9 @@ The weekly report pulls metrics for the last two weeks. Based on these metrics
 it calculates changes in response time, error rate and throughput, comparing one 
 week to the other.
 
-### Usage
+### Example
 
 ```
-$ gem install appsignal_report
-$ APPSIGNAL_API_TOKEN=ABC123 appsignal_report_weekly -i XYZ456
 {
   "title": "AppSignal Weekly Report",
   "now": "2017-08-14 13:19:15 UTC",
@@ -125,6 +163,13 @@ The application ID is part of any appsignal.com URL, as soon as you open an
 application. If you look at the example URL
 `appsignal.com/devex/sites/XYZ456/web/exceptions`, the application ID is 
 `XYZ456`.
+
+### How do I set up a Slack webhook?
+
+Go to this [page](https://my.slack.com/services/new/incoming-webhook) to set up
+a Slack webhook. You can specify some settings like user name or an avatar, and
+should be provided a webhook URL in the format of 
+`https://hooks.slack.com/services/ABC/123/XYZ`.
 
 ## Maintainer
 
