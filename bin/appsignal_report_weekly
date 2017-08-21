@@ -15,55 +15,12 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 require 'appsignal_report'
-require 'optparse'
 
-options = { slack_webhook: nil, app_id: nil, app_name: nil }
-parser = OptionParser.new do |parser|
-  parser.banner =
-    'Usage: APPSIGNAL_API_TOKEN=XXX ./bin/appsignal_report_weekly [options]'
-  parser.separator ''
-  parser.separator 'Specific options:'
-  parser.on('-i ID',
-            '--app-id ID',
-            String,
-            'Specify Appsignal App Id') do |id|
-    options[:app_id] = id
-  end
-  parser.on('-n NAME',
-            '--app-name NAME',
-            String,
-            'Specify a name for the Appsignal App') do |name|
-    options[:app_name] = name
-  end
-  parser.on('-s WEBHOOK_URL',
-            '--slack WEBHOOK_URL',
-            String,
-            'Post the report to a Slack Webhook') do |url|
-    options[:slack_webhook] = url
-  end
-  parser.separator ''
-  parser.separator 'Common options:'
-  parser.on_tail('-h', '--help', 'Show this message') do
-    puts parser
-    exit
-  end
-end
-parser.parse!
+option_parser = AppsignalReport::CLI::OptionParser
+  .new(type: :weekly, api_token: ENV['APPSIGNAL_API_TOKEN'])
 
-report = AppsignalReport::WeeklyReport.new(
-  api_token: ENV['APPSIGNAL_API_TOKEN'],
-  app_id: options[:app_id],
-  app_name: options[:app_name]
-)
+option_parser.parse
 
-report.generate
-
-unless options[:slack_webhook].nil?
-  message = AppsignalReport::SlackMessage.new(
-    report: report,
-    webhook_url: options[:slack_webhook]
-  )
-  puts message.post
-else
-  puts report.report.to_json
-end
+AppsignalReport::CLI::Runner
+  .new(option_parser.options)
+  .run
