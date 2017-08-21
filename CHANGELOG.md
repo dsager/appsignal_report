@@ -3,6 +3,7 @@
 ### WIP
 _August 21th, 2017_
 
+- refactored executables to share runner/options code
 - display throughput resolution provided by AppSignal
 
 ### 0.1.0
