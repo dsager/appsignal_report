@@ -1,7 +1,7 @@
 # Changelog
 
-### WIP
-_August 21th, 2017_
+### 0.1.1
+_August 21st 2017_
 
 - refactored executables to share runner/options code
 - display throughput resolution provided by AppSignal
