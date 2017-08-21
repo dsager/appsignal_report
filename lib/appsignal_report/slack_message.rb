@@ -36,7 +36,7 @@ module AppsignalReport
         ":information_source: #{report.report[:messages][:info]}",
         "#{error_rate_icon} #{report.report[:messages][:error_rate]}",
         "#{response_time_icon} #{report.report[:messages][:response_time]}",
-        "#{throughput_icon} #{report.report[:messages][:hourly_throughput]}",
+        "#{throughput_icon} #{report.report[:messages][:throughput]}",
       ]
     end
 
@@ -50,11 +50,7 @@ module AppsignalReport
 
     def throughput_icon
       up_down =
-        if report.report[:diff][:hourly_throughput].negative?
-          'downwards'
-        else
-          'upwards'
-        end
+        report.report[:diff][:throughput].negative? ? 'downwards' : 'upwards'
       ":chart_with_#{up_down}_trend:"
     end
   end

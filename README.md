@@ -74,17 +74,18 @@ record your deployments.
 {
   "title": "AppSignal Deploy Report",
   "last_deploy_time": "2017-08-10 09:47:52 UTC",
+  "resolution": "minutely",
   "before": {
     "data_points": 62,
     "error_rate": 0.4675038958657989,
     "response_time": 94.9387856438841,
-    "hourly_throughput": 32727
+    "throughput": 32727
   },
   "after": {
     "data_points": 62,
     "error_rate": 0.0733371596199222,
     "response_time": 56.71109484008057,
-    "hourly_throughput": 31362
+    "throughput": 31362
   },
   "data_samples_from": "2017-08-10 08:47:00 UTC",
   "data_samples_to": "2017-08-10 10:48:00 UTC",
@@ -93,14 +94,14 @@ record your deployments.
     "error_rate_pct": -0.8431303775894644,
     "response_time": -38.22769080380353,
     "response_time_pct": -0.40265620151489834,
-    "hourly_throughput": -1365,
-    "hourly_throughput_pct": -0.041708680905674214
+    "throughput": -1365,
+    "throughput_pct": -0.041708680905674214
   },
   "messages": {
     "info": "The deploy finished at 2017-08-10 09:47:52 UTC",
     "error_rate": "The error rate decreased by 0.39% (from 0.47% to 0.07%, that is a change of -84.31%).",
     "response_time": "The response time decreased by 38.23ms (from 94.94ms to 56.71ms, that is a change of -40.27%).",
-    "hourly_throughput": "The hourly throughput decreased by 1365.0 req/h (from 32727.0 req/h to 31362.0 req/h, that is a change of -4.17%)."
+    "throughput": "The hourly throughput decreased by 1365.0 req/m (from 32727.0 req/m to 31362.0 req/m, that is a change of -4.17%)."
   }
 }
 ```
@@ -119,17 +120,18 @@ week to the other.
   "now": "2017-08-14 13:19:15 UTC",
   "one_week_ago": "2017-08-07 13:19:15 UTC",
   "two_weeks_ago": "2017-07-31 13:19:15 UTC",
+  "resolution": "hourly",
   "before": {
     "data_points": 168,
     "error_rate": 0.19637939102939866,
     "response_time": 74.6427894180237,
-    "hourly_throughput": 34611.166666666664
+    "throughput": 34611.166666666664
   },
   "after": {
     "data_points": 168,
     "error_rate": 0.06227341986188213,
     "response_time": 61.364840452820985,
-    "hourly_throughput": 30819.684523809523
+    "throughput": 30819.684523809523
   },
   "data_samples_from": "2017-07-31 14:00:00 UTC",
   "data_samples_to": "2017-08-14 13:00:00 UTC",
@@ -138,14 +140,14 @@ week to the other.
     "error_rate_pct": -0.6828922855119783,
     "response_time": -13.277948965202711,
     "response_time_pct": -0.17788655901967856,
-    "hourly_throughput": -3791.4821428571413,
-    "hourly_throughput_pct": -0.1095450546169726
+    "throughput": -3791.4821428571413,
+    "throughput_pct": -0.1095450546169726
   },
   "messages": {
     "info": "Comparing the weeks 2017-07-31-2017-08-07 and 2017-08-07-2017-08-14.",
     "error_rate": "The error rate decreased by 0.13% (from 0.2% to 0.06%, that is a change of -68.29%).",
     "response_time": "The response time decreased by 13.28ms (from 74.64ms to 61.36ms, that is a change of -17.79%).",
-    "hourly_throughput": "The hourly throughput decreased by 3791.48 req/h (from 34611.17 req/h to 30819.68 req/h, that is a change of -10.95%)."
+    "throughput": "The hourly throughput decreased by 3791.48 req/h (from 34611.17 req/h to 30819.68 req/h, that is a change of -10.95%)."
   }
 }
 ```

@@ -1,5 +1,10 @@
 # Changelog
 
+### WIP
+_August 21th, 2017_
+
+- display throughput resolution provided by AppSignal
+
 ### 0.1.0
 _August 14th, 2017_
 
