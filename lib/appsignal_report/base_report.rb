@@ -37,13 +37,14 @@ module AppsignalReport
 
     def process_metrics
       api_response = perform_api_request(metrics_uri)
+      @report[:resolution] = api_response[:resolution]
       data = balance_samples(gather_samples(api_response[:data]))
       %i(before after).each do |key|
         @report[key] = {
           data_points: data[key].size,
           error_rate: get_average(data[key], :ex_rate),
           response_time: get_average(data[key], :mean),
-          hourly_throughput: get_average(data[key], :count),
+          throughput: get_average(data[key], :count),
         }
       end
       @report.merge!(
@@ -60,7 +61,8 @@ module AppsignalReport
         info: info_message,
         error_rate: metric_message(:error_rate, '%'),
         response_time: metric_message(:response_time, 'ms'),
-        hourly_throughput: metric_message(:hourly_throughput, ' req/h'),
+        throughput: metric_message(:throughput,
+                                   " req/#{@report[:resolution][0]}"),
       }
     end
 
@@ -91,8 +93,8 @@ module AppsignalReport
         error_rate_pct: pct_diff(:error_rate),
         response_time: abs_diff(:response_time),
         response_time_pct: pct_diff(:response_time),
-        hourly_throughput: abs_diff(:hourly_throughput),
-        hourly_throughput_pct: pct_diff(:hourly_throughput),
+        throughput: abs_diff(:throughput),
+        throughput_pct: pct_diff(:throughput),
       }
     end
 
