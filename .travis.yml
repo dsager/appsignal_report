@@ -14,6 +14,5 @@ deploy:
     secure: UEpqnvXJ4z7GWbZy02Pkrp+8DhuoILuSXY+/Af54BrC2CU98Pi/ujkiZbc2Or2SrKBSeKUGoAZPcmCpDL+89US5+P3aAdiAe0QGUlWjixrpp0C+9zYsmYGtoR62casd0b5R325O1GoHZuMmU+UI1CTVY2xvqyRuXOi8rziQQ114v0oDISp4ZjKMZmw5yqBi0WZWRtOFtJo1UMo18/YXCnD4Ptj7YWyKdYSGQiixFA7dwK9fr5HHZBZpbvYc/Yd0eaYlsP4uWl9rNnEGixF7LedIM0cs/2Q0PyA8nbn9jSHcP3MsFYMppgN/4/z5T64UTf4TRFA7WRx76ordsh9Qzp5dT9yW1vNEWVLYlarn+3L/gb6EsgFEn7CLhsHnBDVSWD/qFrtaJLGcXCzFNYwTjk8BDFvFjfGTQPPVlFSTJVcGBQNXVglybbakA2DJXotAjkooQLjuWxEPiP0NkwQ5NgyvD6yte8gYEBrBExmO+sW+qHZbJbCn3fJDLQhvczVkDFE8J31RsxfY8IAJPrhOVgMGzpKTC1YKTqRtfjwiamoGwSkvIz83R5suuGfPLJ9zlBMqC95gtJoZch/MXxg6ZrO+vs5RTh2g7u9O++xidG1rYSFtZVa4hyVvpfQbUdPvEYBtZSzu6tjQznhKGIvT+f37QKeBniwyDfNgZ8b6w/+I=
   gem: appsignal_report
   on:
-    tags: true
     branch: master
     repo: dsager/appsignal_report
