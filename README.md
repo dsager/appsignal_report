@@ -175,7 +175,8 @@ should be provided a webhook URL in the format of
 
 ## Maintainer
 
-[Daniel Sager](https://github.com/dsager)
+- [Devex](https://github.com/orgs/Devex) 
+- [Daniel Sager](https://github.com/dsager)
 
 ## Contributing
 
