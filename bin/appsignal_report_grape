@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Generate a report based on defined grape endpoints and Appsignal metrics.
+#
+#
+# Pull up the help message to learn about the usage of this script:
+#
+#         ./bin/appsignal_report_grape --help
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+require 'appsignal_report'
+
+option_parser = AppsignalReport::CLI::OptionParser
+  .new(type: :grape, api_token: ENV['APPSIGNAL_API_TOKEN'])
+
+option_parser.parse
+
+AppsignalReport::CLI::Runner
+  .new(option_parser.options)
+  .run
