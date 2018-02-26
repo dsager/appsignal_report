@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.1.2
+_February 26th 2018_
+
+- fixed AppSignal graph-API calls by adding the `kind` parameter
+
 ### 0.1.1
 _August 21st 2017_
 
