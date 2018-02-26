@@ -35,6 +35,7 @@ module AppsignalReport
     def metrics_uri
       query = URI.encode_www_form(
         token: api_token,
+        kind: :web,
         from: report[:two_weeks_ago].iso8601,
         'fields[]': %i(mean count ex_rate)
       )
