@@ -39,6 +39,7 @@ module AppsignalReport
       one_hour = 3600 # seconds
       query = URI.encode_www_form(
         token: api_token,
+        kind: :web,
         from: (report[:last_deploy_time] - one_hour).iso8601,
         to: (report[:last_deploy_time] + one_hour).iso8601,
         'fields[]': %i(mean count ex_rate)
